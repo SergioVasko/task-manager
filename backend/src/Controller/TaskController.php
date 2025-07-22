@@ -33,10 +33,10 @@ class TaskController extends AbstractController
 
         if ($user) {
             // Authenticated users see their tasks (public & private)
-            $tasks = $this->taskRepository->findBy(['user' => $user]);
+            $tasks = $this->taskRepository->findBy(['user' => $user], ['id' => 'ASC']);
         } else {
             // Guests see only public tasks
-            $tasks = $this->taskRepository->findBy(['visibility' => TaskVisibility::PUBLIC]);
+            $tasks = $this->taskRepository->findBy(['visibility' => TaskVisibility::PUBLIC], ['id' => 'ASC']);
         }
 
         $data = array_map(fn(Task $task) => new TaskOutput($task), $tasks);
