@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Dto\TaskOutput;
+use App\Entity\Category;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Repository\TaskRepository;
@@ -57,7 +58,6 @@ class TaskController extends AbstractController
     }
 
     #[Route('', name: 'create', methods: ['POST'])]
-
     public function create(
         Request $request,
         SerializerInterface $serializer,
@@ -80,12 +80,18 @@ class TaskController extends AbstractController
             return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
         }
 
+        $category = $this->em->getRepository(Category::class)->find($taskInput->category);
+        if (!$category) {
+            return $this->json(['error' => 'Category not found'], Response::HTTP_BAD_REQUEST);
+        }
+
         $task = new Task();
         $task->setTitle($taskInput->title);
         $task->setDescription($taskInput->description);
         $task->setStatus($taskInput->status);
         $task->setVisibility(TaskVisibility::from($taskInput->visibility));
         $task->setUser($user);
+        $task->setCategory($category);
         $task->setCreatedAt(new \DateTimeImmutable());
 
         $this->em->persist($task);
@@ -101,6 +107,7 @@ class TaskController extends AbstractController
         SerializerInterface $serializer,
         ValidatorInterface $validator
     ): JsonResponse {
+        /** @var User $user */
         $user = $this->getUser();
         if (!$user || $task->getUser() !== $user) {
             return $this->json(['error' => 'Access denied'], Response::HTTP_FORBIDDEN);
@@ -128,6 +135,13 @@ class TaskController extends AbstractController
         }
         if ($taskInput->visibility !== null) {
             $task->setVisibility(TaskVisibility::from($taskInput->visibility));
+        }
+        if ($taskInput->category !== null) {
+            $category = $this->em->getRepository(Category::class)->find($taskInput->category);
+            if (!$category) {
+                return $this->json(['error' => 'Category not found'], Response::HTTP_BAD_REQUEST);
+            }
+            $task->setCategory($category);
         }
 
         $this->em->flush();

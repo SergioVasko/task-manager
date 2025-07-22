@@ -20,4 +20,7 @@ class TaskInput
     #[Assert\NotNull]
     #[Assert\Choice(choices: [TaskVisibility::PUBLIC->value, TaskVisibility::PRIVATE->value])]
     public ?string $visibility = TaskVisibility::PRIVATE->value;
+
+    #[Assert\Type('integer')]
+    public ?int $category = null;
 }
