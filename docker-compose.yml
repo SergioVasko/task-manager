@@ -2,7 +2,7 @@ version: '3.0'
 
 services:
   # Symfony backend
-  php:
+  task-manager-php:
     build:
       context: ./backend
     volumes:
@@ -11,9 +11,9 @@ services:
     ports:
       - "9000:9000"
     depends_on:
-      - db
+      - task-manager-db
 
-  db:
+  task-manager-db:
     image: postgres:13
     environment:
       POSTGRES_DB: task-manager-db
@@ -24,7 +24,7 @@ services:
     ports:
       - "5432:5432"
 
-  nginx:
+  task-manager-nginx:
     image: nginx:alpine
     ports:
       - "8080:80"
@@ -32,10 +32,10 @@ services:
       - ./backend:/var/www/html
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - php
+      - task-manager-php
 
   # React frontend
-  frontend:
+  task-manager-react:
     build:
       context: ./frontend
     ports:
@@ -47,7 +47,7 @@ services:
     stdin_open: true
     tty: true
     depends_on:
-      - nginx
+      - task-manager-nginx
 
 volumes:
   pgdata:

@@ -1,18 +1,15 @@
-FROM node:18
+FROM node:20
 
-WORKDIR /
+WORKDIR /app
 
-# Copy package.json and yarn.lock first (for caching)
+# Enable Corepack and install Yarn 4.9.2 globally
+RUN corepack enable && corepack prepare yarn@4.9.2 --activate
+
+# Copy package.json and yarn.lock early for better Docker cache
 COPY package.json yarn.lock ./
 
-# Install yarn 3 in the container
-RUN npm install -g yarn && yarn set version berry
-
-# Optional: if you want node_modules instead of PnP
-COPY .yarnrc.yml ./
-
-# Install dependencies with yarn 3
-RUN yarn install
+# Use node_modules linker (instead of PnP)
+RUN echo "nodeLinker: node-modules" > .yarnrc.yml && yarn install
 
 # Copy the rest of the source code
 COPY . .

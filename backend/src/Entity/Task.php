@@ -8,6 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Task
 {
     #[ORM\Id]
@@ -36,6 +37,12 @@ class Task
 
     #[ORM\ManyToOne(inversedBy: 'tasks')]
     private ?Category $category = null;
+
+    #[ORM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->setCreatedAt(new \DateTimeImmutable());
+    }
 
     public function getId(): ?int
     {

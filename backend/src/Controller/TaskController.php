@@ -31,15 +31,13 @@ class TaskController extends AbstractController
     public function index(): JsonResponse
     {
         $user = $this->getUser();
-
         if ($user) {
-            // Authenticated users see their tasks (public & private)
-            $tasks = $this->taskRepository->findBy(['user' => $user], ['id' => 'ASC']);
+            // Authenticated users see all tasks (public & private)
+            $tasks = $this->taskRepository->findBy([], ['id' => 'ASC']);
         } else {
             // Guests see only public tasks
             $tasks = $this->taskRepository->findBy(['visibility' => TaskVisibility::PUBLIC], ['id' => 'ASC']);
         }
-
         $data = array_map(fn(Task $task) => new TaskOutput($task), $tasks);
 
         return $this->json($data, Response::HTTP_OK);
@@ -49,7 +47,6 @@ class TaskController extends AbstractController
     public function show(Task $task): JsonResponse
     {
         $user = $this->getUser();
-
         if ($task->getVisibility() === TaskVisibility::PRIVATE && $task->getUser() !== $user) {
             throw new AccessDeniedException('Access denied');
         }
@@ -80,9 +77,12 @@ class TaskController extends AbstractController
             return $this->json(['errors' => $errorMessages], Response::HTTP_BAD_REQUEST);
         }
 
-        $category = $this->em->getRepository(Category::class)->find($taskInput->category);
-        if (!$category) {
-            return $this->json(['error' => 'Category not found'], Response::HTTP_BAD_REQUEST);
+        $category = null;
+        if ($taskInput->category) {
+            $category = $this->em->getRepository(Category::class)->find($taskInput->category);
+            if (!$category) {
+                return $this->json(['error' => 'Category not found'], Response::HTTP_BAD_REQUEST);
+            }
         }
 
         $task = new Task();
@@ -92,7 +92,6 @@ class TaskController extends AbstractController
         $task->setVisibility(TaskVisibility::from($taskInput->visibility));
         $task->setUser($user);
         $task->setCategory($category);
-        $task->setCreatedAt(new \DateTimeImmutable());
 
         $this->em->persist($task);
         $this->em->flush();

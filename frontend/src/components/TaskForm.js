@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 
-function TaskForm({ task, onTaskSaved, onCancel }) {
+function TaskForm({ user, task, onTaskSaved, onCancel }) {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
     const [visibility, setVisibility] = useState("public"); // or "private"
@@ -9,10 +9,10 @@ function TaskForm({ task, onTaskSaved, onCancel }) {
 
     useEffect(() => {
         if (task) {
-            setTitle(task.title);
-            setDescription(task.description);
-            setVisibility(task.visibility);
-            setCategory(task.category.id || "");
+            setTitle(task.title || "");
+            setDescription(task.description || "");
+            setVisibility(task.visibility || "public");
+            setCategory(task.category?.id?.toString() || "");
         } else {
             // Clear form for new task
             setTitle("");
@@ -58,7 +58,7 @@ function TaskForm({ task, onTaskSaved, onCancel }) {
     };
 
     return (
-        <form onSubmit={handleSubmit} className="mb-6 p-4 bg-white rounded shadow">
+        <form hidden={!user} onSubmit={handleSubmit} className="mb-6 p-4 bg-white rounded shadow">
             <h3 className="text-xl mb-4">{task ? "Edit Task" : "Create New Task"}</h3>
 
             <div className="mb-2">
