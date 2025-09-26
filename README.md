@@ -1,6 +1,12 @@
 # Task Manager
 
-A web-based application for managing tasks with user authentication, task visibility controls, and categorization. The backend is built with Symfony (PHP) and PostgreSQL, while the frontend is developed using React. The application is containerized using Docker for consistent development and deployment.
+A web-based application for managing tasks with user authentication, task visibility controls, and categorization. 
+The backend is built with Symfony (PHP) and PostgreSQL, while the frontend is developed using React. 
+The application is containerized using Docker for consistent development and deployment.
+
+Check the requirements [here](tech_requirements/objective.txt).
+
+Screenhots are available in the [tech_requirements](tech_requirements/) directory.
 
 ## Setup Instructions
 

@@ -1,0 +1,52 @@
+Objective
+---------
+Build a minimal task management system that allows users to create and track tasks.
+Your implementation should be structured and realistic — something you’d feel comfortable maintaining or building upon.
+We’re most interested in seeing how you approach problems, not just what gets completed.
+
+Core Requirements
+-----------------
+
+1. Backend
+Create, update, retrieve, and complete tasks.
+Task fields: title, description, status, created_at, and visibility (public/private).
+
+2. Entity Relationships
+Add one related entity (e.g., Project, Category, or Tag).
+Design the relationship freely (e.g., many-to-one, many-to-many).
+
+3. User Access and Visibility
+Public (unauthenticated) users can view public tasks only.
+Authenticated users can manage their own tasks (public and private).
+Use any lightweight authentication method.
+
+4. Containers – OCI-Compliant Environment
+Provide setup for an OCI-compliant container system (Docker, Podman, etc.).
+Include Backen, Frontend, web server, and database.
+Should run with a single command.
+
+5. Version Control – Git
+Use Git for version control.
+Include clear commit messages and logical history.
+
+6. Frontend (React)
+Frontend to view/create/update tasks based on user role.
+
+What to Submit
+--------------
+- GitHub/GitLab repository with:
+  - Source code
+  - Container setup
+  - README.md with:
+    - Setup instructions
+    - Design decisions
+    - Notes on trade-offs or incomplete features
+
+How to Approach This
+-----------------------------
+You may focus on parts that best show your strengths.
+You may ask for any clarification.
+You have no restrictions on the technology stack you can use.
+Use comments or the README to explain choices.
+It’s okay to leave parts unfinished if you document your thinking.
+Everyone approaches problems differently — we’re interested in how you solve them.
